@@ -8,9 +8,7 @@ import (
 	"os"
 )
 
-var socket net.Conn
-
-// Choose the right directory to the ipc socket and return it
+// GetIpcPath chooses the correct directory to the ipc socket and returns it
 func GetIpcPath() string {
 	variablesnames := []string{"XDG_RUNTIME_DIR", "TMPDIR", "TMP", "TEMP"}
 
@@ -25,20 +23,17 @@ func GetIpcPath() string {
 	return "/tmp"
 }
 
-func CloseSocket() error {
-	if socket != nil {
-		socket.Close()
-		socket = nil
-	}
-	return nil
+// Socket extends net.Conn methods
+type Socket struct {
+	net.Conn
 }
 
 // Read the socket response
-func Read() string {
+func (socket *Socket) Read() (string, error) {
 	buf := make([]byte, 512)
-	payloadlength, err := socket.Read(buf)
+	payloadlength, err := socket.Conn.Read(buf)
 	if err != nil {
-		//fmt.Println("Nothing to read")
+		return "", err
 	}
 
 	buffer := new(bytes.Buffer)
@@ -46,28 +41,34 @@ func Read() string {
 		buffer.WriteByte(buf[i])
 	}
 
-	return buffer.String()
+	r := buffer.String()
+	if r == "" {
+		return "", fmt.Errorf("Empty response")
+	}
+
+	return r, nil
 }
 
 // Send opcode and payload to the unix socket
-func Send(opcode int, payload string) string {
+func (socket *Socket) Send(opcode int, payload string) (string, error) {
 	buf := new(bytes.Buffer)
 
+	fmt.Println(payload)
 	err := binary.Write(buf, binary.LittleEndian, int32(opcode))
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
 	err = binary.Write(buf, binary.LittleEndian, int32(len(payload)))
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
 	buf.Write([]byte(payload))
 	_, err = socket.Write(buf.Bytes())
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
-	return Read()
+	return socket.Read()
 }

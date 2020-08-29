@@ -1,42 +1,36 @@
 package main
 
 import (
-	"fmt"
+	"os"
 	"time"
 
-	"github.com/ananagame/rich-go/client"
+	discordrpc "github.com/rikkuness/discord-rpc"
 )
 
 func main() {
-	err := client.Login("DISCORD_APP_ID")
+
+	drpc, err := discordrpc.New(os.Getenv("DISCORD_CLIENTID"))
 	if err != nil {
 		panic(err)
 	}
+	defer drpc.Socket.Close()
 
-	now := time.Now()
-	err = client.SetActivity(client.Activity{
-		State:      "Heyy!!!",
-		Details:    "I'm running on rich-go :)",
-		LargeImage: "largeimageid",
-		LargeText:  "This is the large image :D",
-		SmallImage: "smallimageid",
-		SmallText:  "And this is the small image",
-		Party: &client.Party{
-			ID:         "-1",
-			Players:    15,
-			MaxPlayers: 24,
+	err = drpc.SetActivity(discordrpc.Activity{
+		Details: "Foo",
+		State:   "Bar",
+		Assets: &discordrpc.Assets{
+			SmallImage: "keyart_hero",
+			LargeImage: "keyart_hero",
 		},
-		Timestamps: &client.Timestamps{
-			Start: &now,
+		Timestamps: &discordrpc.Timestamps{
+			Start: &discordrpc.Epoch{Time: time.Now()},
 		},
 	})
-
 	if err != nil {
 		panic(err)
 	}
 
-	// Discord will only show the presence if the app is running
-	// Sleep for a few seconds to see the update
-	fmt.Println("Sleeping...")
-	time.Sleep(time.Second * 10)
+	for {
+		time.Sleep(time.Second)
+	}
 }
