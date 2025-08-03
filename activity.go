@@ -6,9 +6,13 @@ import (
 )
 
 // Activity holds the data for discord rich presence
+// https://discord.com/developers/docs/events/gateway-events#activity-object-activity-types
 type Activity struct {
-	Details string `json:"details,omitempty"`
-	State   string `json:"state,omitempty"`
+	Type       int    `json:"type,omitempty"`
+	Name       string `json:"name,omitempty"`
+	StatusType int    `json:"status_display_type,omitempty"`
+	Details    string `json:"details,omitempty"`
+	State      string `json:"state,omitempty"`
 
 	Timestamps *Timestamps `json:"timestamps,omitempty"`
 	Assets     *Assets     `json:"assets,omitempty"`
