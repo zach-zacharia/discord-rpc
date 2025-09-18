@@ -19,7 +19,7 @@ type Activity struct {
 	Party      *Party      `json:"party,omitempty"`
 	Secrets    *Secrets    `json:"screts,omitempty"`
 
-	Instance bool `json:"instance"`
+	Instance *bool `json:"instance,omitempty"`
 }
 
 // Timestamps holds unix timestamps for start and/or end of the game
