@@ -1,4 +1,4 @@
-module github.com/rikkuness/discord-rpc
+module github.com/zach-zacharia/discord-rpc
 
 go 1.13
 
