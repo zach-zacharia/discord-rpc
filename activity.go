@@ -14,7 +14,7 @@ type Activity struct {
 	Details    string `json:"details,omitempty"`
 	State      string `json:"state,omitempty"`
 
-	// Timestamps *Timestamps `json:"timestamps,omitempty"`
+	Timestamps *Timestamps `json:"timestamps,omitempty"`
 	Assets  *Assets  `json:"assets,omitempty"`
 	Party   *Party   `json:"party,omitempty"`
 	Secrets *Secrets `json:"screts,omitempty"`
@@ -23,18 +23,18 @@ type Activity struct {
 }
 
 // Timestamps holds unix timestamps for start and/or end of the game
-// type Timestamps struct {
-// 	Start *Epoch `json:"start,omitempty"`
-// 	End   *Epoch `json:"end,omitempty"`
-// }
+type Timestamps struct {
+	Start *Epoch `json:"start,omitempty"`
+	End   *Epoch `json:"end,omitempty"`
+}
 
 // Epoch wrapper around time.Time to ensure times are sent as a unix epoch int
-// type Epoch struct{ time.Time }
+type Epoch struct{ time.Time }
 
-// MarshalJSON converts time.Time to unix time int
-// func (t Epoch) MarshalJSON() ([]byte, error) {
-// 	return []byte(strconv.FormatInt(t.Unix(), 10)), nil
-// }
+MarshalJSON converts time.Time to unix time int
+func (t Epoch) MarshalJSON() ([]byte, error) {
+	return []byte(strconv.FormatInt(t.Unix(), 10)), nil
+}
 
 // Assets passes image references for inclusion in rich presence
 type Assets struct {
