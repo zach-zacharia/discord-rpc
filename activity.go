@@ -15,9 +15,9 @@ type Activity struct {
 	State      string `json:"state,omitempty"`
 
 	Timestamps *Timestamps `json:"timestamps,omitempty"`
-	Assets  *Assets  `json:"assets,omitempty"`
-	Party   *Party   `json:"party,omitempty"`
-	Secrets *Secrets `json:"screts,omitempty"`
+	Assets     *Assets     `json:"assets,omitempty"`
+	Party      *Party      `json:"party,omitempty"`
+	Secrets    *Secrets    `json:"screts,omitempty"`
 
 	Instance *bool `json:"instance,omitempty"`
 }
@@ -31,7 +31,7 @@ type Timestamps struct {
 // Epoch wrapper around time.Time to ensure times are sent as a unix epoch int
 type Epoch struct{ time.Time }
 
-MarshalJSON converts time.Time to unix time int
+// MarshalJSON converts time.Time to unix time int
 func (t Epoch) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.FormatInt(t.Unix(), 10)), nil
 }
